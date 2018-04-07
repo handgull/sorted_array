@@ -14,6 +14,20 @@ class sorted_array {
     T *_array;
     T **_sorted;
     uint _elements;
+
+    // selection sort
+    void sort() {
+      T *appo;
+      for(uint i=0; i<_elements-1; i++) {
+        for(uint j=i+1; j<=_elements-1; j++) {
+          if(!_funct(*_sorted[i], *_sorted[j])) {
+            appo = _sorted[i];
+            _sorted[i] = _sorted[j];
+            _sorted[j] = appo;
+          }
+        }
+      }
+    }
   public:
     // Costruttore di default
     sorted_array() : _size(0), _array(0), _sorted(0), _elements(0) {}
@@ -33,9 +47,9 @@ class sorted_array {
       } catch(...) {
         delete[] _array;
         delete[] _sorted;
-        _size = 0;
         _array = 0;
         _sorted = 0;
+        _size = 0;
         _elements = 0;
         throw;
       }
@@ -66,12 +80,8 @@ class sorted_array {
       _elements = 0;
     }
 
-    // Setta tutti gli elementi a 0
+    // Setta elements a 0
     void clear() {
-      for(uint i=0; i<_size; i++) {
-        _array[i] = 0;
-        //_sorted[i] = 0;
-      }
       _elements = 0;
     }
 
@@ -80,9 +90,9 @@ class sorted_array {
       if(_elements >= _size)
         throw out_of_range("I'm Already full");
       _array[_elements] = element;
-      //_sorted[i] = &_array[_elements];
+      _sorted[_elements] = &_array[_elements];
       _elements++;
-      //sort();
+      sort();
     }    
 
     // Metodo getter per l'i-esimo elemento di _array
