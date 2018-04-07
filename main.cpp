@@ -1,4 +1,4 @@
-#include "sorted_array.h"
+#include "sorted_array.hpp"
 #include <cassert>
 #include <cmath>
 using namespace std;
