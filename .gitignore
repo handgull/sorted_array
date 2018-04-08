@@ -1,5 +1,8 @@
 # Testo d'esame
 Esame-180418.pdf
+# Generati da Doxygen
+html/*
+latex/*
 # Prerequisites
 *.d
 

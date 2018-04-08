@@ -59,6 +59,19 @@ class sorted_array {
       }
     }
 
+    /** 
+    @brief myswap
+
+    Scambia il contenuto di due sorted_array
+    @param other (l'oggetto con il quale scambiare i dati) 
+    **/
+    void myswap(sorted_array &other) {
+      swap(other._size, this->_size);
+      swap(other._elements, this->_elements);
+      swap(other._array, this->_array);
+      swap(other._sorted, this->_sorted);
+    }
+
   public:
     /**
     @brief Costruttore di default (METODO FONDAMENTALE)
@@ -102,7 +115,16 @@ class sorted_array {
       }
     }
 
-    // Setta elements a 0
+    /**
+    @brief clear
+
+    Cancella il contenuto dell'array.
+    N.B ho preferito un implementazione che modifica solo _elements,
+    la variabile che segna la lunghezza degli array;
+    in questo modo tramite altri miei controlli se si supera la nuova
+    lunghezza nonostante i vecchi valori siano ancora presenti verrà lanciata
+    un'eccezione.
+    **/
     void clear() {
       _elements = 0;
     }
@@ -120,11 +142,18 @@ class sorted_array {
       _sorted = new T*[n];
       clear();
     }
+    /**
+    @brief get_size
+    @return La _size dell'array.
+    **/
     uint get_size() {
       return _size;
     }
 
-    // elements getter
+    /**
+    @brief get_elements
+    @return Il numero di elementi dell'array che hanno un valore.
+    **/
     uint get_elements() {
       return _elements;
     }
@@ -144,7 +173,29 @@ class sorted_array {
       _elements = 0;
     }
 
-    // Inserisce un elemento negli array
+    /**
+    @brief operator=
+
+    Operatore di assegnamento che permette la copia tra sorted_array.
+    @param other (l'oggetto da cui copiare)
+    @return puntatore all'oggetto che lancia il metodo.
+    **/
+    sorted_array &operator=(const sorted_array &other) {
+      if (this != &other) {
+        sorted_array tmp(other);
+        this->swap(tmp);
+      }
+      return *this;
+    }
+
+    /**
+    @brief push
+
+    Aggiunge il nuovo elemento nella prima locazione disponibile
+    (basandosi su _elements) e poi sorta immediatamente l'array
+    con un sort adatto alle inserzioni continue.
+    @param element (nuovo elemento dell'array)
+    **/
     void push(const T &element) {
       if(_elements >= _size)
         throw out_of_range("I'm Already full");
@@ -154,14 +205,27 @@ class sorted_array {
       insertion_sort();
     }
 
-    // Metodo getter per l'i-esimo elemento di _array
+    /**
+    @brief operator()
+
+    Metodo getter per leggere il valore i-esimo dell'array non ordinato 
+
+    @param i (indice della cella dell'array)
+    @return Il valore della posizione i-esima
+    **/
     const T &operator()(uint i) const {
       if(i < 0 || i >= _elements)
         throw out_of_range("Out of index");
       return _array[i];
     }
+    /**
+    @brief operator[]
 
-    // Metodo getter per l'i-esimo elemento di _sorted
+    Metodo getter per leggere il valore i-esimo dell'array ordinato 
+
+    @param i (indice della cella dell'array)
+    @return Il valore della posizione i-esima
+    **/
     const T &operator[](uint i) const {
       if(i < 0 || i >= _elements)
         throw out_of_range("Out of index");
@@ -169,9 +233,189 @@ class sorted_array {
     }
 
     /* ITERATORI */
+    class unsorted_const_iterator;
 
+    class const_iterator {
+      const T **p;  
+      public:
+        typedef std::forward_iterator_tag iterator_category;
+        typedef T value_type;
+        typedef ptrdiff_t difference_type;
+        typedef const T* pointer;
+        typedef const T& reference;
 
+        const_iterator() : p(0) {}
 
+        const_iterator(const const_iterator &other) : p(other.p) {}
 
+        const_iterator& operator=(const const_iterator &other) {
+          p = other.p;
+          return *this;
+        }
+
+        ~const_iterator() {}
+
+        reference operator*() const {
+          return **p;
+        }
+
+        pointer operator->() const {
+          return p;
+        }
+
+        const_iterator operator++(int) {
+          const_iterator tmp(*this);
+          ++p;
+          return tmp;
+        }
+
+        const_iterator& operator++() {
+          ++p;
+          return *this;
+        }
+
+        bool operator==(const const_iterator &other) const {
+          return p == other.p;
+        }
+
+        bool operator!=(const const_iterator &other) const {
+          return p != other.p;
+        }
+
+        friend class unsorted_const_iterator;
+
+        bool operator==(const unsorted_const_iterator &other) const {
+          return p == other.p;
+        }
+
+        bool operator!=(const unsorted_const_iterator &other) const {
+          return p != other.p;
+        }
+      private:
+        friend class sorted_array;
+
+        const_iterator(const T**p) : p(p) {}
+
+    };
+
+    const_iterator begin() const {
+      return const_iterator(const_cast<const T**>(_sorted));
+    }
+  
+    const_iterator end() const {
+      return const_iterator(const_cast<const T**>(_sorted + _elements));
+    }
+
+    class unsorted_const_iterator {
+      const T *p; 
+      public:
+        typedef std::forward_iterator_tag iterator_category;
+        typedef T value_type;
+        typedef ptrdiff_t difference_type;
+        typedef const T* pointer;
+        typedef const T& reference;
+
+        unsorted_const_iterator() : p(0) {}
+    
+        unsorted_const_iterator(const unsorted_const_iterator &other)
+          : p(other.p) {}
+
+        unsorted_const_iterator& operator=(const unsorted_const_iterator &other) {
+          p = other.p;
+          return *this;
+        }
+    
+        unsorted_const_iterator& operator=(const const_iterator &other) {
+          p = other.p;
+          return *this;
+        }
+
+        ~unsorted_const_iterator() {}
+
+        reference operator*() const {
+          return *p;
+        }
+
+        pointer operator->() const {
+          return p;
+        }
+
+        unsorted_const_iterator operator++(int) {
+          unsorted_const_iterator tmp(*this);
+          ++p;
+          return tmp;
+        }
+
+        unsorted_const_iterator& operator++() {
+          ++p;
+          return *this;
+        }
+
+        bool operator==(const unsorted_const_iterator &other) const {
+          return p == other.p;
+        }
+
+        bool operator!=(const unsorted_const_iterator &other) const {
+          return p != other.p;
+        }
+    
+        friend class const_iterator;
+
+        bool operator==(const const_iterator &other) const {
+          return p == other.p;
+        }
+
+        bool operator!=(const const_iterator &other) const {
+          return p != other.p;
+        }
+
+      private:
+        friend class sorted_array; 
+
+        unsorted_const_iterator(const T*p) : p(p) {}
+    };
+
+    unsorted_const_iterator begin_u() const {
+      return unsorted_const_iterator(_array);
+    }
+
+    unsorted_const_iterator end_u() const {
+      return unsorted_const_iterator(_array+_elements);
+    }
 };
+
+/**
+@brief find_count
+
+dato un generico sorted_array che contiene dati di tipo T,
+un valore target di tipo T, e un predicato binario,
+stampa a schermo il numero di valori contenuti nel sorted_array
+uguali al target secondo il criterio definito dal predicato binario.
+@param sorted_array (array in cui cercare)
+@param target (valore target)
+@param funct (predicato da soddisfare)
+**/
+template <typename T, typename F, typename P>
+void find_count(const sorted_array<T,F> &sarr,const T &target,const P &func) {
+  for(typename sorted_array<T,F>::size_type i = 0; i < sarr.get_elements(); i++)
+    if(func(sarr[i], target))
+      cout<<sarr[i]<<" ";
+}
+
+/**
+@brief opeartor<<
+
+Operatore di stream, permette di spedire su uno stream
+di output il contenuto dell'array.
+@param os (lo stream target)
+@param sarr (sorted_array da utilizzare)
+@return Il riferimento allo stream di output
+**/
+template <typename T, typename F>
+ostream &operator<<(ostream &os, const sorted_array<T,F> &sarr) {
+  for(typename sorted_array<T,F>::size_type i = 0; i < sarr.get_elements(); ++i)
+    os << sarr[i] << " ";
+  return os;
+  cout<<"check 2"<<endl;
+}
 #endif

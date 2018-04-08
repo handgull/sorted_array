@@ -3,20 +3,42 @@
 #include <cmath>
 using namespace std;
 
+/**
+@file main.cpp
+@brief Test delle funzionalità richieste
+**/
+
+/**
+@brief greater_than
+
+Funtore usato per l'ordinamento decrescente.
+**/
 struct greater_than {
   bool operator()(const int &a, const int &b) const {
     return a > b;
   }
 };
+/**
+@brief near_to_10
 
+Funtore usato per ordinare i numeri dal più vicino al valore 10
+al più lontano.
+**/
 struct near_to_10 {
   bool operator()(const int &a, const int &b) const {
     return abs(a-10) < abs(b-10);
   }
 };
 
+/**
+@brief test_constructors
+
+Testa i meccanismi relativi la creazione degli ogetti,
+i vari metodi setter getter, il distruttore ed il metodo
+richiesto dalla consegna clear()
+**/
 void test_constructors() {
-  /// Default constructor
+  /// - Test sul Default constructor
   cout<<"Testing default constructor..."<<endl;
   sorted_array<uint, greater_than> sarr1;
   // Test 1
@@ -86,7 +108,7 @@ void test_constructors() {
     cout<< "ERR"<<endl;
   sarr1.~sorted_array();
 
-  /// Size constructor
+  /// - Test sul Size constructor
   cout<<"Testing constructor with size init..."<<endl;
   sorted_array<int, near_to_10> sarr2(7);
   // Test 1
@@ -109,7 +131,7 @@ void test_constructors() {
   cout<<'['<< (uint)sarr2(2) <<"] OK!"<<endl;
   // Test 4
 
-  /// Copy constructor
+  /// - Test sul Copy constructor
   cout<<"Testing the copy constructor..."<<endl;
   sorted_array<int, near_to_10> sarr3 = sarr2;
   // Test 1
@@ -148,6 +170,12 @@ void test_constructors() {
   sarr3.~sorted_array();
 }
 
+/**
+@brief intstr
+
+Una semplice struct contenente un int ed una string
+usata per testare il relativo funtore.
+**/
 struct intstr {
   int n;
   string s;
@@ -156,11 +184,22 @@ struct intstr {
   intstr(int num, string str) : n(num), s(str) {}
 };
 
+/**
+@brief alphabetical
+
+Funtore usato per odinare le stringhe in ordine alfabetico
+**/
 struct alphabetical {
   bool operator()(const string &a, const string &b) const {
     return a < b;
   }
 };
+/**
+@brief smaller_intstr
+
+Funtore usato per ordinare le struct dando priorità al valore numerico,
+in caso di parità va a vedere l'ordine alfabetico delle stringhe.
+**/
 struct smaller_intstr {
   bool operator()(const intstr &a, const intstr &b) const {
     if(a.n == b.n)
@@ -170,8 +209,14 @@ struct smaller_intstr {
   }
 };
 
+/**
+@brief test_functors
 
+Testa i meccanismi relativi l'ordinamento dell'array
+tentando diversi funtori su diversi tipi di variabili.
+**/
 void test_functors() {
+  /// - Test su string
   cout<<"Testing functor with strings..."<<endl;
   sorted_array<string, alphabetical> sarr1(4);
   string expected[] = {"ape","limoncello","zaino","zucchero"};
@@ -185,6 +230,7 @@ void test_functors() {
     cout<< sarr1[i] <<',';
   }
   cout<<"\b] OK!"<<endl;
+  /// - Test su struct
   cout<<"Testing functor with structs..."<<endl;
   sorted_array<intstr, smaller_intstr> sarr2(4);
   intstr expected2[] = {{1,"auno"},{1,"buno"},{6,"sei"},{8,"otto"}};
@@ -198,8 +244,15 @@ void test_functors() {
     cout<<'{'<<sarr2[i].n<<','<<sarr2[i].s<<"},";
   }
   cout<<"\b] OK!"<<endl;
+  /// N.B. I test relativi ad int,float ecc. sono supposti tramite i test
+  /// contenuti in test_constructors().
 }
 
+/**
+@brief test_iterators
+
+Testa il corretto funzionamento degli iteratori
+**/
 void test_iterators() {}
 
 int main() {
