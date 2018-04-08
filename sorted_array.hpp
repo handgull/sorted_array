@@ -4,6 +4,11 @@
 #include <cstddef>
 using namespace std;
 
+/**
+@file sorted_array.hpp
+@brief Dichiarazione della classe sorted_array
+**/
+
 typedef unsigned int uint;
 
 template <typename T, typename F>
@@ -14,9 +19,16 @@ class sorted_array {
     T *_array;
     T **_sorted;
     uint _elements;
+    /**
+    @brief selection_sort
 
-    // selection sort
-    void sort() {
+    Ordina l'array di puntatori a puntatori di tipo T tramite selection_sort.
+
+    N.B. Questo metodo è inutilizzato
+    dato che ho implementato anche l'insertion_sort,
+    ed utilizzo quest'ultimo per l'ordinamento.
+    **/
+    void selection_sort() {
       T *appo;
       for(uint i=0; i<_elements-1; i++) {
         for(uint j=i+1; j<=_elements-1; j++) {
@@ -28,14 +40,49 @@ class sorted_array {
         }
       }
     }
+    /**
+    @brief insertion_sort
+
+    Ordina l'array di puntatori a puntatori di tipo T tramite insertion_sort.
+    **/
+    void insertion_sort() {
+      uint jmin;
+      T *appo;
+      for (uint i=0; i<_elements-1; i++) {
+        jmin = i;
+          for (uint j=i+1; j<_elements; j++)
+            if (_funct(*_sorted[j], *_sorted[jmin]))
+              jmin = j;
+            appo = _sorted[jmin];
+            _sorted[jmin] = _sorted[i];
+            _sorted[i] = appo;
+      }
+    }
+
   public:
-    // Costruttore di default
+    /**
+    @brief Costruttore di default (METODO FONDAMENTALE)
+
+    Costruttore di default per istanziare un sorted_array vuoto.
+    Necessita quindi una chiamata del metodo setter della size
+    **/
     sorted_array() : _size(0), _array(0), _sorted(0), _elements(0) {}
-    // Costruttore che inizializza la lunghezza dell'array
+    /**
+    @brief Size constructor (METODO FONDAMENTALE)
+
+    Permette di istanziare un sorted_array con una determinata lunghezza
+    @param size (la futura lunghezza dell'oggetto sorted_array)
+    **/
     sorted_array(const uint size) : _elements(0) {
     set_size(size);
     }
-    // Costruttore copia
+    /**
+    @brief Copy constructor (METODO FONDAMENTALE)
+
+    Costruttore copia. Permette di istanziare un sorted_array con i valori
+    presi da un altro sorted_array.
+    @param other_sarr (un altro sorted array, da usare per creare la copia)
+    **/
     sorted_array(const sorted_array &other_sarr) {
       set_size(other_sarr._size);
       _elements = other_sarr._elements;
@@ -55,11 +102,23 @@ class sorted_array {
       }
     }
 
-    // _size setter e getter
+    // Setta elements a 0
+    void clear() {
+      _elements = 0;
+    }
+
+    /**
+    @brief set_size
+
+    Metodo setter di _size, permette di modificare la lunghezza dell'array
+    CANCELLANDONE il contenuto.
+    @param _size (la futura lunghezza dell'oggetto sorted_array)
+    **/
     void set_size(const uint n) {
       _size = n;
       _array = new T[n];
       _sorted = new T*[n];
+      clear();
     }
     uint get_size() {
       return _size;
@@ -71,17 +130,17 @@ class sorted_array {
     }
 
     // Hakai
+    /**
+    @brief Distruttore (METODO FONDAMENTALE)
+
+    Distruttore. Rimuove la memoria allocata dall'oggetto.
+    **/
     ~sorted_array() {
       delete[] _array;
       delete[] _sorted;
       _array = 0;
       _sorted = 0;
       _size = 0;
-      _elements = 0;
-    }
-
-    // Setta elements a 0
-    void clear() {
       _elements = 0;
     }
 
@@ -92,8 +151,8 @@ class sorted_array {
       _array[_elements] = element;
       _sorted[_elements] = &_array[_elements];
       _elements++;
-      sort();
-    }    
+      insertion_sort();
+    }
 
     // Metodo getter per l'i-esimo elemento di _array
     const T &operator()(uint i) const {
@@ -108,5 +167,11 @@ class sorted_array {
         throw out_of_range("Out of index");
       return *_sorted[i];
     }
+
+    /* ITERATORI */
+
+
+
+
 };
 #endif
