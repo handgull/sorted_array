@@ -233,45 +233,84 @@ class sorted_array {
     }
 
     /* ITERATORI */
-    class unsorted_const_iterator;
-
     class const_iterator {
-      const T **p;  
+      const T **p;
       public:
-        typedef std::forward_iterator_tag iterator_category;
+        typedef random_access_iterator_tag iterator_category;
         typedef T value_type;
         typedef ptrdiff_t difference_type;
         typedef const T* pointer;
         typedef const T& reference;
-
+    
         const_iterator() : p(0) {}
-
-        const_iterator(const const_iterator &other) : p(other.p) {}
-
+      
+        const_iterator(const const_iterator &other) : p(other.p){}
+        
         const_iterator& operator=(const const_iterator &other) {
           p = other.p;
           return *this;
         }
-
+      
         ~const_iterator() {}
 
         reference operator*() const {
-          return **p;
+          return **(p);
         }
 
         pointer operator->() const {
           return p;
         }
 
+        reference operator[](uint i) {
+          return **(p+i);
+        }
+      
         const_iterator operator++(int) {
           const_iterator tmp(*this);
-          ++p;
+          p++;
           return tmp;
         }
 
         const_iterator& operator++() {
-          ++p;
+          p++;
           return *this;
+        }
+
+        const_iterator operator--(int) {
+          const_iterator tmp(*this);
+          p--;
+          return tmp;
+        }
+
+        const_iterator &operator--() {
+          p--;
+          return *this;
+        }
+
+        const_iterator operator+(uint i) {
+          const_iterator tmp(*this);
+          tmp.p += i;
+          return tmp;
+        }
+
+        const_iterator operator-(uint i) {
+          const_iterator tmp(*this);
+          tmp.p -= i;
+          return tmp;
+        }
+
+        const_iterator& operator+=(uint i) {
+          p += i;
+          return *this;
+        }
+
+        const_iterator& operator-=(uint i) {
+          p -= i;
+          return *this;
+        }
+
+        difference_type operator-(const const_iterator &other) {
+          return (p > other.p ? p - other.p : other.p - p);
         }
 
         bool operator==(const const_iterator &other) const {
@@ -282,50 +321,58 @@ class sorted_array {
           return p != other.p;
         }
 
-        friend class unsorted_const_iterator;
-
-        bool operator==(const unsorted_const_iterator &other) const {
-          return p == other.p;
+        bool operator>(const const_iterator &other) const {
+          return p > other.p;
         }
 
-        bool operator!=(const unsorted_const_iterator &other) const {
-          return p != other.p;
+        bool operator>=(const const_iterator &other) const {
+          return p >= other.p;
         }
+
+        bool operator<(const const_iterator &other) const {
+          return p < other.p;
+        }
+
+        bool operator<=(const const_iterator &other) const {
+          return p <= other.p;
+        }
+
       private:
         friend class sorted_array;
 
-        const_iterator(const T**p) : p(p) {}
-
+        const_iterator(const T** ptr) : p(ptr){}
     };
+    /**
+    @brief begin
 
+    @return iteratore alla fine dell'array ordinato
+    */
     const_iterator begin() const {
       return const_iterator(const_cast<const T**>(_sorted));
     }
-  
+    /**
+    @brief end
+
+    @return iteratore alla fine dell'array ordinato
+    */
     const_iterator end() const {
       return const_iterator(const_cast<const T**>(_sorted + _elements));
     }
 
     class unsorted_const_iterator {
-      const T *p; 
+      const T *p;
       public:
-        typedef std::forward_iterator_tag iterator_category;
+        typedef random_access_iterator_tag iterator_category;
         typedef T value_type;
         typedef ptrdiff_t difference_type;
         typedef const T* pointer;
         typedef const T& reference;
 
         unsorted_const_iterator() : p(0) {}
-    
-        unsorted_const_iterator(const unsorted_const_iterator &other)
-          : p(other.p) {}
-
+      
+        unsorted_const_iterator(const unsorted_const_iterator &other): p(other.p){}
+        
         unsorted_const_iterator& operator=(const unsorted_const_iterator &other) {
-          p = other.p;
-          return *this;
-        }
-    
-        unsorted_const_iterator& operator=(const const_iterator &other) {
           p = other.p;
           return *this;
         }
@@ -340,15 +387,56 @@ class sorted_array {
           return p;
         }
 
+        reference operator[](uint i) {
+          return *(p + i);
+        }
+
         unsorted_const_iterator operator++(int) {
           unsorted_const_iterator tmp(*this);
-          ++p;
+          p++;
           return tmp;
         }
 
         unsorted_const_iterator& operator++() {
-          ++p;
+          p++;
           return *this;
+        }
+
+        unsorted_const_iterator operator--(int) {
+          unsorted_const_iterator tmp(*this);
+          p--;
+          return tmp;
+        }
+
+        unsorted_const_iterator &operator--() {
+          p--;
+          return *this;
+        }
+
+        unsorted_const_iterator operator+(uint i) {
+          unsorted_const_iterator tmp(*this);
+          tmp.p += i;
+          return tmp;
+        }
+
+        unsorted_const_iterator operator-(uint i) {
+          unsorted_const_iterator tmp(*this);
+          tmp.p -= i;
+          return tmp;
+        }
+
+        unsorted_const_iterator& operator+=(uint i) {
+          p += i;
+          return *this;
+        }
+
+        unsorted_const_iterator& operator-=(uint i) {
+          p -= i;
+          return *this;
+        }
+
+        difference_type operator-(const unsorted_const_iterator &other) {
+          return (p > other.p ? p - other.p : other.p - p);
         }
 
         bool operator==(const unsorted_const_iterator &other) const {
@@ -358,29 +446,44 @@ class sorted_array {
         bool operator!=(const unsorted_const_iterator &other) const {
           return p != other.p;
         }
-    
-        friend class const_iterator;
 
-        bool operator==(const const_iterator &other) const {
-          return p == other.p;
+        bool operator>(const unsorted_const_iterator &other) const {
+          return p > other.p;
         }
 
-        bool operator!=(const const_iterator &other) const {
-          return p != other.p;
+        bool operator>=(const unsorted_const_iterator &other) const {
+          return p >= other.p;
+        }
+
+        bool operator<(const unsorted_const_iterator &other) const {
+          return p < other.p;
+        }
+      
+        bool operator<=(const unsorted_const_iterator &other) const {
+          return p <= other.p;
         }
 
       private:
-        friend class sorted_array; 
+        friend class sorted_array;
 
-        unsorted_const_iterator(const T*p) : p(p) {}
+        unsorted_const_iterator(const T* ptr): p(ptr){}
+        
     };
+    /**
+    @brief end
 
+    @return iteratore alla fine dell'array non ordinato
+    */
     unsorted_const_iterator begin_u() const {
       return unsorted_const_iterator(_array);
     }
+    /**
+    @brief end
 
+    @return iteratore alla fine dell'array non ordinato
+    */
     unsorted_const_iterator end_u() const {
-      return unsorted_const_iterator(_array+_elements);
+      return unsorted_const_iterator(_array + _elements);
     }
 };
 
@@ -397,7 +500,7 @@ uguali al target secondo il criterio definito dal predicato binario.
 **/
 template <typename T, typename F, typename P>
 void find_count(const sorted_array<T,F> &sarr,const T &target,const P &func) {
-  for(typename sorted_array<T,F>::size_type i = 0; i < sarr.get_elements(); i++)
+  for(typename sorted_array<T,F>::uint i = 0; i < sarr.get_elements(); i++)
     if(func(sarr[i], target))
       cout<<sarr[i]<<" ";
 }
@@ -413,9 +516,8 @@ di output il contenuto dell'array.
 **/
 template <typename T, typename F>
 ostream &operator<<(ostream &os, const sorted_array<T,F> &sarr) {
-  for(typename sorted_array<T,F>::size_type i = 0; i < sarr.get_elements(); ++i)
+  for(typename sorted_array<T,F>::uint i = 0; i < sarr.get_elements(); ++i)
     os << sarr[i] << " ";
   return os;
-  cout<<"check 2"<<endl;
 }
 #endif

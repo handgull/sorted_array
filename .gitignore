@@ -3,6 +3,10 @@ Esame-180418.pdf
 # Generati da Doxygen
 html/*
 latex/*
+# Generati da valgrind
+vgcore.*
+# Cartella latex per la presentazione
+presentation/*
 # Prerequisites
 *.d
 

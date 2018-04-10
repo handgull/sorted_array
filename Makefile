@@ -4,7 +4,10 @@ main.exe: main.o
 main.o: main.cpp
 	g++ -c main.cpp -o main.o
 
-.PHONY: clean
+.PHONY: clean doc
 
 clean:
-	rm -rf *.o *.exe
+	rm -rf *.o *.exe ./html ./latex
+
+doc:
+	doxygen Doxyfile

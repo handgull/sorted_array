@@ -253,7 +253,68 @@ void test_functors() {
 
 Testa il corretto funzionamento degli iteratori
 **/
-void test_iterators() {}
+void test_iterators() {
+  // Test 1
+  cout<<"Testing sorted iterator...";
+  sorted_array<int, greater_than> sarr(6);
+  sarr.push(1);
+  sarr.push(3);
+  sarr.push(2);
+  sarr.push(5);
+  sarr.push(4);
+  sarr.push(7);
+  // _sorted = [7,5,4,3,2,1]
+  sorted_array<int, greater_than>::const_iterator cit, cite;
+  cit = sarr.begin();
+  cite = sarr.end();
+  assert(cit < cite);
+  ++cit;
+  assert(*cit == 5);
+  assert(cit[0] == 5);
+  assert(*(cit++) == 5);
+  assert(*(++cit) == 3);
+  assert(*(cit--) == 3);
+  assert(*(--cit) == 5);
+  cit += 3;
+  assert(*cit == 2);
+  cit -= 2;
+  assert(*cit == 4);
+  cit = cit + 1;
+  assert(*cit == 3);
+  cit += 2;
+  assert(cit+1 == cite);
+  cit++;
+  assert(cit == cite);
+  cout<<" OK!"<<endl;
+  // Test 2
+  // _array =  [1,3,2,5,4,7]
+  cout<<"Testing sorted iterator...";
+  sorted_array<int, greater_than>::unsorted_const_iterator ucit, ucite;
+  ucit = sarr.begin_u();
+  ucite = sarr.end_u();
+  assert(ucit < ucite);
+  ++ucit;
+  assert(*ucit == 3);
+  assert(ucit[0] == 3);
+  assert(*(ucit++) == 3);
+  assert(*(++ucit) == 5);
+  assert(*(ucit--) == 5);
+  assert(*(--ucit) == 3);
+  ucit += 3;
+  assert(*ucit == 4);
+  ucit -= 2;
+  assert(*ucit == 2);
+  cout<<" OK!"<<endl;
+  cout<<endl<<"Elementi array sorted: ";
+  sorted_array<int, greater_than>::const_iterator i,ie;
+    for(i = sarr.begin(),ie = sarr.end(); i!=ie; ++i)
+      cout<<*i<<" ";
+  cout<<endl<<"Elementi array unsorted: ";
+  sorted_array<int, greater_than>::unsorted_const_iterator iu,ieu;
+    for(iu = sarr.begin_u(),ieu = sarr.end_u(); iu!=ieu; ++iu)
+      cout<<*iu<<" ";
+  cout<<endl;
+}
 
 int main() {
   test_constructors();
