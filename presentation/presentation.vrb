@@ -1,0 +1,4 @@
+\frametitle{Tempo VS Spazio}
+Essendo l'array template _sorted sottoposto a molti ordinamenti, ho implementato l'insertion sort per ottimizzare l'ordinamento.
+
+Inoltre la mia funzione clear() setta semplicemente il numero di elementi a 0.

@@ -1,0 +1,51 @@
+\documentclass[10px]{beamer}
+
+\usepackage{xcolor}
+
+\newcommand*{\snippet}[2]{\colorbox{#1!30}{\parbox{.98\linewidth}{#2}}}
+\usetheme{metropolis}
+\title{Progetto C++, sorted\_array}
+\date{\today}
+\author{806752, Gull\'i Andrea a.gulli1@campus.unimib.it}
+\institute{Milano Bicocca}
+\begin{document}
+\maketitle
+\section{Descrizione}
+\begin{frame}{Descrizione}
+Gli elementi vengono inseriti tramite il metodo \snippet{gray}{push()}\newline
+Ho inoltre implementato un array di puntatori a puntatore,
+che permette di accedere agli elementi secondo un criterio di ordinamento personalizzabile.
+\end{frame}
+\section{Tempo VS Spazio}
+\begin{frame}{Scelte}
+Essendo l'array template \_sorted sottoposto a molti ordinamenti,
+ho implementato l'\textbf{insertion sort} per ottimizzare l'ordinamento.\newline\newline
+Inoltre la mia funzione \textbf{clear()} setta semplicemente il numero di elementi a 0.
+\end{frame}
+\section{Accessi in lettura}
+\begin{frame}{Accessi in lettura}
+\begin{itemize}
+\item \textbf{operator[]} accede all'array di puntatori ordinato.
+\item \textbf{operator()} accede all'array con i dati in ordine di inserimento.
+\end{itemize}
+Ho attuato i dovuti controlli riguardanti l'\textbf{Out of Index}
+\end{frame}
+\section{Accesso in lettura - Iteratori}
+\begin{frame}{Accesso in lettura - Iteratori}
+Come da consegna ho sviluppato due iteratori per l'accesso in lettura:\newline
+\textbf{const\_iterator} e \textbf{unsorted\_const\_iterator}.
+\begin{enumerate}
+\item \textbf{const\_iterator} accede ai dati ordinati.
+\item \textbf{unsorted\_const\_iterator} accede ai dati non ordinati.
+\end{enumerate}
+Sono inoltre indispensabili le relative funzioni \textbf{begin()} e \textbf{end()}
+\end{frame}
+\section{Conclusion}
+\begin{frame}{Documentazione}
+Per maggiori dettagli,\newline\newline
+La documentazione pu\'o essere generata tramite \snippet{gray}{\$ make doc}
+\end{frame}
+\begin{frame}[standout]
+Fine
+\end{frame}
+\end{document}

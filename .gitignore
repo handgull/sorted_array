@@ -5,8 +5,6 @@ html/*
 latex/*
 # Generati da valgrind
 vgcore.*
-# Cartella latex per la presentazione
-presentation/*
 # Prerequisites
 *.d
 
