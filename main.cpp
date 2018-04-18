@@ -106,7 +106,6 @@ void test_constructors() {
     cout<< "OK!"<<endl;
   else
     cout<< "ERR"<<endl;
-  sarr1.~sorted_array();
 
   /// - Test sul Size constructor
   cout<<"Testing constructor with size init..."<<endl;
@@ -155,7 +154,6 @@ void test_constructors() {
   cout<<"\b] OK!"<<endl;
   // Test 4
   cout<<"  checking size and elements after the destructor...";
-  sarr2.~sorted_array();
   assert(sarr2.get_size() == 0);
   assert(sarr2.get_elements() == 0);
   assert(sarr3.get_size() == 7);
@@ -167,7 +165,6 @@ void test_constructors() {
   cout<<"  checking the second element of copy after destructor...";
   assert(sarr3(1) == 5);
   cout<<'['<< (uint)sarr3(1) <<"] OK!"<<endl;
-  sarr3.~sorted_array();
 }
 
 /**

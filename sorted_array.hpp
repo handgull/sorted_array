@@ -2,6 +2,7 @@
 #define sorted_array_H
 #include <iostream>
 #include <cstddef>
+#include <stdexcept>
 using namespace std;
 
 /**
@@ -183,7 +184,7 @@ class sorted_array {
     sorted_array &operator=(const sorted_array &other) {
       if (this != &other) {
         sorted_array tmp(other);
-        this->swap(tmp);
+        this->myswap(tmp);
       }
       return *this;
     }
